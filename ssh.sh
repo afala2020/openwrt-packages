@@ -64,37 +64,46 @@ echo "配置系统服务..."
 sudo systemctl enable cpolar
 sudo systemctl start cpolar
 
-# 后台静默启动SSH隧道并将输出重定向到日志文件
-echo "正在后台启动SSH隧道..."
-nohup cpolar tcp 22 > cpolar_ssh.log 2>&1 &
-sleep 15  # 等待隧道信息生成
+# 强制终止占用4040端口的旧cpolar进程（解决端口冲突）
+echo "检查并释放4040端口..."
+sudo pkill -f "cpolar http 4040"  # 终止默认的Web管理进程（如有）
+sleep 2  # 等待进程释放端口
 
-# 等待隧道信息生成（动态检测日志内容）
-max_retries=10
+# 后台启动SSH隧道并指定不同的Web管理端口（例如4041防止冲突）
+echo "启动SSH隧道..."
+nohup cpolar tcp 22 --config=localhost:4041 > cpolar_ssh.log 2>&1 &
+
+# 动态检测隧道地址（优化匹配规则）
+max_retries=15
 count=0
 public_url=""
 
+echo -n "等待隧道初始化..."
 while [ $count -lt $max_retries ] && [ -z "$public_url" ]; do
-    sleep 5
-    public_url=$(grep -oP "tcp://\K[0-9a-z.-]+:[0-9]+" cpolar_ssh.log | head -n 1)
+    sleep 3
+    public_url=$(grep -oP "Forwarding\s+tcp://\K[^ ]+" cpolar_ssh.log | head -n 1)
+    echo -n "."
     count=$((count+1))
 done
+echo ""  # 换行
 
-# 检查是否成功获取地址
+# 验证结果
 if [ -z "$public_url" ]; then
-    echo "错误：隧道地址获取失败，请检查日志文件 cpolar_ssh.log" >&2
+    echo "错误：隧道启动失败，请检查日志！" >&2
+    echo "可能原因："
+    echo "1. 本地4040/4041端口仍被占用（尝试重启系统）"
+    echo "2. AuthToken未正确配置"
+    echo "3. 网络连接异常"
     exit 1
 else
-    # 提取主机名和端口
-    hostname=$(echo "$public_url" | cut -d':' -f1)
+    # 提取地址和端口
+    host=$(echo "$public_url" | cut -d':' -f1)
     port=$(echo "$public_url" | cut -d':' -f2)
     
-    # 格式化输出
-    echo "========================================"
-    echo "SSH公网代理已启动"
-    echo "公网地址: $hostname"
-    echo "端口号  : $port"
-    echo "========================================"
-    echo "连接示例:"
-    echo "ssh -p $port 用户名@$hostname"
+    # 终端高亮显示
+    echo "================================================"
+    echo -e "SSH公网代理地址: \033[32m$host\033[0m"
+    echo -e "端口号: \033[32m$port\033[0m"
+    echo "================================================"
+    echo -e "连接命令: \033[33mssh -p $port 用户名@$host\033[0m"
 fi
