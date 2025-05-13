@@ -50,3 +50,36 @@ done
     configure_ssh
 
     unlock_services
+
+# 下载并安装cpolar
+echo "开始安装cpolar..."
+curl -L https://www.cpolar.com/static/downloads/install-release-cpolar.sh | sudo bash
+
+# 配置认证token（替换123456789为你的实际token）
+echo "配置token..."
+cpolar authtoken NDBjNmY2NGMtNzRhNS00Njg0LThlNDAtMjNmNjNlMDlmNWIw
+
+# 设置开机启动并启动服务
+echo "配置系统服务..."
+sudo systemctl enable cpolar
+sudo systemctl start cpolar
+
+# 创建SSH隧道并捕获输出
+echo "正在创建SSH隧道..."
+nohup cpolar tcp 22 > cpolar_ssh.log 2>&1 &
+sleep 20  # 等待隧道信息生成
+
+# 提取公网地址和端口
+public_url=$(grep -o "tcp://[0-9a-z.-]*:[0-9]*" cpolar_ssh.log | head -n 1)
+
+if [ -z "$public_url" ]; then
+    echo "错误：隧道地址获取失败，请检查日志文件 cpolar_ssh.log"
+else
+    echo "===================================================="
+    echo "SSH公网连接地址：$public_url"
+    echo "===================================================="
+    echo "使用示例：ssh -p $(echo $public_url | cut -d':' -f3) 用户名@$(echo $public_url | cut -d':' -f2 | sed 's/\/\///')"
+fi
+
+# 保留日志文件供检查
+echo "隧道日志已保存至：$(pwd)/cpolar_ssh.log"
