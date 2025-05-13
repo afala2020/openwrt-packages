@@ -58,7 +58,7 @@ curl -L https://www.cpolar.com/static/downloads/install-release-cpolar.sh | sudo
 # 配置认证token（替换123456789为你的实际token）
 echo "配置token......"
 # cpolar authtoken 123456789
-read -p "请输入cpolar的AuthToken: " CPOLAR_TOKEN
+read -p "请输入AuthToken: " CPOLAR_TOKEN
 cpolar authtoken "$CPOLAR_TOKEN"
 
 # 设置开机启动并启动服务
