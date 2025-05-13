@@ -64,22 +64,37 @@ echo "配置系统服务..."
 sudo systemctl enable cpolar
 sudo systemctl start cpolar
 
-# 创建SSH隧道并捕获输出
-echo "正在创建SSH隧道..."
+# 后台静默启动SSH隧道并将输出重定向到日志文件
+echo "正在后台启动SSH隧道..."
 nohup cpolar tcp 22 > cpolar_ssh.log 2>&1 &
-sleep 20  # 等待隧道信息生成
+sleep 15  # 等待隧道信息生成
 
-# 提取公网地址和端口
-public_url=$(grep -o "tcp://[0-9a-z.-]*:[0-9]*" cpolar_ssh.log | head -n 1)
+# 等待隧道信息生成（动态检测日志内容）
+max_retries=10
+count=0
+public_url=""
 
+while [ $count -lt $max_retries ] && [ -z "$public_url" ]; do
+    sleep 5
+    public_url=$(grep -oP "tcp://\K[0-9a-z.-]+:[0-9]+" cpolar_ssh.log | head -n 1)
+    count=$((count+1))
+done
+
+# 检查是否成功获取地址
 if [ -z "$public_url" ]; then
-    echo "错误：隧道地址获取失败，请检查日志文件 cpolar_ssh.log"
+    echo "错误：隧道地址获取失败，请检查日志文件 cpolar_ssh.log" >&2
+    exit 1
 else
-    echo "===================================================="
-    echo "SSH公网连接地址：$public_url"
-    echo "===================================================="
-    echo "使用示例：ssh -p $(echo $public_url | cut -d':' -f3) 用户名@$(echo $public_url | cut -d':' -f2 | sed 's/\/\///')"
+    # 提取主机名和端口
+    hostname=$(echo "$public_url" | cut -d':' -f1)
+    port=$(echo "$public_url" | cut -d':' -f2)
+    
+    # 格式化输出
+    echo "========================================"
+    echo "SSH公网代理已启动"
+    echo "公网地址: $hostname"
+    echo "端口号  : $port"
+    echo "========================================"
+    echo "连接示例:"
+    echo "ssh -p $port 用户名@$hostname"
 fi
-
-# 保留日志文件供检查
-echo "隧道日志已保存至：$(pwd)/cpolar_ssh.log"
