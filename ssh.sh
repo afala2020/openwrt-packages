@@ -35,7 +35,7 @@ configure_ssh() {
 }
 
 echo -e "${YELLOW}[1/5] 获取必要信息...${RESET}"
-# 获取密码，确保至少10位且不为空
+# 获取密码，确保至少5位且不为空
 while true; do
   read -p "请输入root密码 (至少5位): " PASSWORD
   if [[ -z "$PASSWORD" ]]; then
