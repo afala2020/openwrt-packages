@@ -53,7 +53,7 @@ done
 
 # 下载并安装cpolar
 echo "开始安装cpolar..."
-curl -L https://www.cpolar.com/static/downloads/install-release-cpolar.sh | bash
+curl -L https://www.cpolar.com/static/downloads/install-release-cpolar.sh | sudo bash
 
 # 配置认证token（替换123456789为你的实际token）
 echo "配置token......"
