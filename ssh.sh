@@ -53,7 +53,7 @@ done
 
 # 下载并安装cpolar
 echo "开始安装cpolar..."
-curl -L https://www.cpolar.com/static/downloads/install-release-cpolar.sh | sudo bash
+curl -L https://www.cpolar.com/static/downloads/install-release-cpolar.sh | bash
 
 # 配置认证token（替换123456789为你的实际token）
 echo "配置token......"
@@ -63,8 +63,8 @@ cpolar authtoken NDBjNmY2NGMtNzRhNS00Njg0LThlNDAtMjNmNjNlMDlmNWIw
 
 # 设置开机启动并启动服务
 echo "配置系统服务..."
-sudo systemctl enable cpolar
-sudo systemctl start cpolar
+systemctl enable cpolar
+systemctl start cpolar
 
 # 后台静默启动SSH隧道并将输出重定向到日志文件
 echo "正在后台启动SSH隧道..."
