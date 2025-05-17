@@ -47,9 +47,9 @@ while true; do
   fi
 done
 
-    configure_ssh
+configure_ssh
 
-    unlock_services
+unlock_services
 
 # 定义要添加的配置行
 CONFIG_LINE="export FORCE_UNSAFE_CONFIGURE=1"
