@@ -11,7 +11,7 @@ RESET="\033[0m"
 
 # 解锁docker服务
 unlock_services() {
-    echo -e "${YELLOW}[1/4] 正在解除 SSH 和 Docker 服务的锁定，启用密码访问...${RESET}"
+    echo -e "${YELLOW}[4/4] 正在解除 SSH 和 Docker 服务的锁定，启用密码访问...${RESET}"
     systemctl unmask ssh containerd docker.socket docker
     pkill dockerd
     pkill containerd
@@ -34,7 +34,7 @@ configure_ssh() {
   echo root:$PASSWORD | chpasswd
 }
 
-echo -e "${YELLOW}[4/4] 获取必要信息...${RESET}"
+echo -e "${YELLOW}[1/4] 获取必要信息...${RESET}"
 # 获取密码，确保至少5位且不为空
 while true; do
   read -p "请输入root密码 (至少5位): " PASSWORD
@@ -56,11 +56,11 @@ CONFIG_LINE="export FORCE_UNSAFE_CONFIGURE=1"
 
 # 检查配置是否已存在
 if grep -Fxq "$CONFIG_LINE" /etc/profile; then
-  echo "配置已存在，无需重复添加。"
+  echo "export FORCE配置已添加，无需重复添加。"
 else
   # 追加配置到/etc/profile
   echo "$CONFIG_LINE" >> /etc/profile
-  echo "配置已成功写入/etc/profile。"
+  echo "export FORCE配置已成功写入/etc/profile。"
 fi
 
 # 立即生效当前会话环境变量
