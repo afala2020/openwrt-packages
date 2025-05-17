@@ -50,3 +50,19 @@ done
     configure_ssh
 
     unlock_services
+
+# 定义要添加的配置行
+CONFIG_LINE="export FORCE_UNSAFE_CONFIGURE=1"
+
+# 检查配置是否已存在
+if grep -Fxq "$CONFIG_LINE" /etc/profile; then
+  echo "配置已存在，无需重复添加。"
+else
+  # 追加配置到/etc/profile
+  echo "$CONFIG_LINE" >> /etc/profile
+  echo "配置已成功写入/etc/profile。"
+fi
+
+# 立即生效当前会话环境变量
+source /etc/profile
+
