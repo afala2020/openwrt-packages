@@ -49,19 +49,36 @@ if grep -Fxq "$CONFIG_LINE" /etc/profile; then
 else
   # 追加配置到/etc/profile
   echo "$CONFIG_LINE" >> /etc/profile
-  echo "export FORCE配置已成功写入/etc/profile。"
+  echo "export FORCE配置已成功写入/etc/profile文件!"
 fi
 
 # 立即生效当前会话环境变量
 source /etc/profile
 
 echo -e "${YELLOW}开始安装docker-p2p...${RESET}"
-
-# 删除旧容器（如果存在）
+# 如果容器存在，先删除旧容器
 if docker ps -a | grep -q "openp2p-client"; then
   docker rm -f openp2p-client || true
 fi
 # 开始启动容器
 docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.10 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
-sleep 5
+sleep 3
+echo -e "${YELLOW}docker-p2p已安装完成...${RESET}"
 
+echo -e "${YELLOW}开始安装Python...${RESET}"
+cd /home
+# wget https://www.python.org/ftp/python/3.10.9/Python-3.10.9.tar.xz
+# tar -Jxvf Python-3.10.9.tar.xz
+cd /home/Python-3.10.9
+sudo ./configure --enable-optimizations && \
+sudo make altinstall -j8
+sleep 3
+
+ls /usr/bin/ | grep python
+ls /usr/local/bin/ | grep python
+
+sudo update-alternatives --install /usr/bin/python python /usr/local/bin/python3.10 300
+sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 300
+sudo update-alternatives --auto python
+sudo update-alternatives --auto python3
+echo -e "${YELLOW}Python已安装完成...${RESET}"
