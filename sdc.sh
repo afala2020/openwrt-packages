@@ -51,6 +51,21 @@ done
 
     unlock_services
 
+# 定义要添加的配置行
+CONFIG_LINE="export FORCE_UNSAFE_CONFIGURE=1"
+
+# 检查配置是否已存在
+if grep -Fxq "$CONFIG_LINE" /etc/profile; then
+  echo "export FORCE配置已添加，无需重复添加。"
+else
+  # 追加配置到/etc/profile
+  echo "$CONFIG_LINE" >> /etc/profile
+  echo "export FORCE配置已成功写入/etc/profile。"
+fi
+
+# 立即生效当前会话环境变量
+source /etc/profile
+
 # 下载并安装cpolar
 echo "开始安装cpolar..."
 curl -L https://www.cpolar.com/static/downloads/install-release-cpolar.sh | sudo bash
