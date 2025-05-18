@@ -82,6 +82,6 @@ sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/pytho
 sudo update-alternatives --auto python
 sudo update-alternatives --auto python3
 echo -e "${YELLOW}Python已安装完成...${RESET}"
-python -V && \
+python -V
 python3 -V
 
