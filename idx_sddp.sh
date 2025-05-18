@@ -81,7 +81,8 @@ sudo update-alternatives --install /usr/bin/python python /usr/local/bin/python3
 sudo update-alternatives --install /usr/bin/python3 python3 /usr/local/bin/python3.10 300
 sudo update-alternatives --auto python
 sudo update-alternatives --auto python3
-echo -e "${YELLOW}Python已安装完成...${RESET}"
+echo -e "${YELLOW}Python版本：${RESET}"
 python -V
+echo -e "${YELLOW}Python3版本：${RESET}"
 python3 -V
 
