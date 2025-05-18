@@ -1,8 +1,7 @@
 set -e  # 遇到错误立即终止脚本
 
-sudo apt update -y && \
 echo "开始安装依赖包！!"
-
+sudo apt update -y && \
 yes "yes" | sudo apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
 bzip2 ccache clang cmake cpio curl device-tree-compiler flex gawk gcc-multilib g++-multilib gettext \
 genisoimage git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev \
