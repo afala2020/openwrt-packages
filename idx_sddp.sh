@@ -64,6 +64,7 @@ fi
 docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.10 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
 sleep 3
 echo -e "${YELLOW}docker-p2p已安装完成...${RESET}"
+sleep 3
 
 echo -e "${YELLOW}开始安装Python...${RESET}"
 cd /home
