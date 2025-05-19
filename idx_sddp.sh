@@ -18,7 +18,7 @@ unlock_services() {
     systemctl start ssh containerd docker.socket docker &>/dev/null
 }
 
-# 解锁SSH服务和SSH登录配置
+# 解锁SSH服务和允许root用户登录、允许用户使用密码登录
 configure_ssh() {
   echo -e "${YELLOW}[2/4] 正在终止现有的 SSH 进程...${RESET}"
   lsof -i:22 | awk '/IPv4/{print $2}' | xargs kill -9 2>/dev/null || true
