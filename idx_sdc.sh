@@ -62,10 +62,15 @@ echo -e "${YELLOW}开始安装docker-p2p...${RESET}"
 if docker ps -a | grep -q "openp2p-client"; then
   docker rm -f openp2p-client || true
 fi
-# 开始启动容器
+# 开始启动P2P容器
 docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.10 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
 sleep 3
-echo -e "${YELLOW}---docker-p2p已安装完成...${RESET}"
+# 检查 P2P 容器是否启动成功
+if ! docker ps | grep -q openp2p-client; then
+  echo -e "${RED}错误: P2P容器启动失败，请检查 Docker 是否正常运行${RESET}"
+  exit 1
+fi
+echo -e "${YELLOW}-----docker-p2p已安装完成...${RESET}"
 sleep 3
 
 # 运行 Firefox 容器
@@ -83,12 +88,12 @@ docker run -d \
   --restart unless-stopped \
   jlesage/firefox
 sleep 3
-# 检查容器是否成功启动
+# 检查Firefox容器是否启动成功
 if ! docker ps | grep -q firefox; then
   echo -e "${RED}错误: Firefox 容器启动失败，请检查 Docker 是否正常运行${RESET}"
   exit 1
 fi
-echo -e "${YELLOW}---Firefox容器已安装完成...${RESET}"
+echo -e "${YELLOW}-----Firefox容器已安装完成...${RESET}"
 sleep 3
 
 # 下载并安装cpolar
