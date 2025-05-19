@@ -97,7 +97,8 @@ echo -e "${YELLOW}-----Firefox容器已安装完成...${RESET}"
 sleep 3
 
 echo -e "${YELLOW}开始安装Python...${RESET}"
-cd /home
+cd /home && \
+rm -rf Python-3.10.6
 wget -O https://www.python.org/ftp/python/3.10.6/Python-3.10.6.tar.xz
 tar -Jxvf Python-3.10.6.tar.xz && \
 rm -rf Python-3.10.6.tar.xz
