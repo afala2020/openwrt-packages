@@ -98,10 +98,10 @@ sleep 3
 
 echo -e "${YELLOW}开始安装Python...${RESET}"
 cd /home && \
-rm -rf Python-3.10.6
+rm -rf Python*
 wget -O https://www.python.org/ftp/python/3.10.6/Python-3.10.6.tar.xz
 tar -Jxvf Python-3.10.6.tar.xz && \
-rm -rf Python-3.10.6.tar.xz
+rm -rf Python-*.tar.xz
 cd /home/Python-3.10.6
 sudo ./configure --enable-optimizations && \
 sudo make altinstall -j10
