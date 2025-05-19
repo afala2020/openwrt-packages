@@ -62,7 +62,7 @@ echo -e "${YELLOW}开始安装docker-p2p...${RESET}"
 if docker ps -a | grep -q "openp2p-client"; then
   docker rm -f openp2p-client || true
 fi
-# 开始启动 P2P 容器
+# 开始启动P2P容器
 docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.10 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
 sleep 3
 # 检查 P2P 容器是否启动成功
