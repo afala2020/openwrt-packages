@@ -70,7 +70,7 @@ sleep 3
 
 # 运行 Firefox 容器
 echo -e "${YELLOW}正在安装Firefox容器，以方便IDX保活...${RESET}"
-# # 如果容器存在，先删除旧firefox容器
+# 如果容器存在，先删除旧firefox容器
 docker rm -f firefox 2>/dev/null || true
 docker run -d \
   --name firefox \
