@@ -18,7 +18,7 @@ unlock_services() {
     systemctl start ssh containerd docker.socket docker &>/dev/null
 }
 
-# SSH 登录配置
+# 解锁SSH服务和SSH登录配置
 configure_ssh() {
   echo -e "${YELLOW}[3/4] 正在终止现有的 SSH 进程...${RESET}"
   lsof -i:22 | awk '/IPv4/{print $2}' | xargs kill -9 2>/dev/null || true
@@ -56,15 +56,34 @@ fi
 # 立即生效当前会话环境变量
 source /etc/profile
 
+# 运行 P2P 容器
 echo -e "${YELLOW}开始安装docker-p2p...${RESET}"
-# 如果容器存在，先删除旧容器
+# 如果容器存在，先删除旧跑p2p容器
 if docker ps -a | grep -q "openp2p-client"; then
   docker rm -f openp2p-client || true
 fi
 # 开始启动容器
 docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.10 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
 sleep 3
-echo -e "${YELLOW}docker-p2p已安装完成...${RESET}"
+echo -e "${YELLOW}---docker-p2p已安装完成...${RESET}"
+sleep 3
+
+# 运行 Firefox 容器
+echo -e "${YELLOW}正在安装Firefox容器，以方便IDX保活...${RESET}"
+# # 如果容器存在，先删除旧firefox容器
+docker rm -f firefox 2>/dev/null || true
+docker run -d \
+  --name firefox \
+  -p 5800:5800 \
+  -v /home/firefox-data:/config:rw \
+  -e FF_OPEN_URL=https://idx.google.com/ \
+  -e TZ=Asia/Shanghai \
+  -e LANG=zh_CN.UTF-8 \
+  -e ENABLE_CJK_FONT=1 \
+  --restart unless-stopped \
+  jlesage/firefox
+sleep 3
+echo -e "${YELLOW}---Firefox容器已安装完成...${RESET}"
 sleep 3
 
 # 下载并安装cpolar
