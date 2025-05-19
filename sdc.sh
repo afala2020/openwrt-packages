@@ -31,21 +31,10 @@ configure_ssh() {
   # 检查并配置密码认证
   ! grep -q "^PasswordAuthentication yes" /etc/ssh/sshd_config && echo -e '\nPasswordAuthentication yes' >> /etc/ssh/sshd_config
 
-  echo root:$PASSWORD | chpasswd
+  echo root:admin@123 | chpasswd
 }
 
 echo -e "${YELLOW}[1/4] 获取必要信息...${RESET}"
-# 获取密码，确保至少5位且不为空
-while true; do
-  read -p "请输入root密码 (至少5位): " PASSWORD
-  if [[ -z "$PASSWORD" ]]; then
-    echo -e "${RED}错误: 密码不能为空，请重新输入${RESET}"
-  elif [[ ${#PASSWORD} -lt 5 ]]; then
-    echo -e "${RED}错误: 密码长度不足5位，请重新输入${RESET}"
-  else
-    break
-  fi
-done
 
 configure_ssh
 
