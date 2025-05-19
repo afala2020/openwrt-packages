@@ -83,6 +83,11 @@ docker run -d \
   --restart unless-stopped \
   jlesage/firefox
 sleep 3
+# 检查容器是否成功启动
+if ! docker ps | grep -q firefox; then
+  echo -e "${RED}错误: Firefox 容器启动失败，请检查 Docker 是否正常运行${RESET}"
+  exit 1
+fi
 echo -e "${YELLOW}---Firefox容器已安装完成...${RESET}"
 sleep 3
 
