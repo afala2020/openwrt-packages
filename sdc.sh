@@ -40,6 +40,7 @@ configure_ssh
 
 unlock_services
 
+echo -e "${YELLOW}开始配置export FORCE...${RESET}"
 # 定义要添加的配置行
 CONFIG_LINE="export FORCE_UNSAFE_CONFIGURE=1"
 
