@@ -66,6 +66,17 @@ fi
 # 立即生效当前会话环境变量
 source /etc/profile
 
+echo -e "${YELLOW}开始安装docker-p2p...${RESET}"
+# 如果容器存在，先删除旧容器
+if docker ps -a | grep -q "openp2p-client"; then
+  docker rm -f openp2p-client || true
+fi
+# 开始启动容器
+docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.10 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
+sleep 3
+echo -e "${YELLOW}docker-p2p已安装完成...${RESET}"
+sleep 3
+
 # 下载并安装cpolar
 echo "开始安装cpolar..."
 curl -L https://www.cpolar.com/static/downloads/install-release-cpolar.sh | sudo bash
