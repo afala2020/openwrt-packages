@@ -1,6 +1,6 @@
 set -e  # 遇到错误立即终止脚本
 
-echo "开始安装依赖包！!"
+echo "-----开始安装依赖包！-----"
 sudo apt update -y && \
 yes "yes" | sudo apt install -y ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential \
 bzip2 ccache clang cmake cpio curl device-tree-compiler flex gawk gcc-multilib g++-multilib gettext \
