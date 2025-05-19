@@ -25,10 +25,10 @@ configure_ssh() {
 
   echo -e "${YELLOW}[3/4] 正在配置 SSH 服务，允许 root 登录和密码认证...${RESET}"
 
-  # 检查并配置 root 登录
+  # 检查并设置允许 root 用户登录
   ! grep -q "^PermitRootLogin yes" /etc/ssh/sshd_config && echo -e '\nPermitRootLogin yes' >> /etc/ssh/sshd_config
 
-  # 检查并配置密码认证
+  # 检查并设置 用户 允许密码登录
   ! grep -q "^PasswordAuthentication yes" /etc/ssh/sshd_config && echo -e '\nPasswordAuthentication yes' >> /etc/ssh/sshd_config
 
   echo root:admin@123 | chpasswd
