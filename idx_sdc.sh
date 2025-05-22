@@ -52,7 +52,7 @@ else
   echo "$CONFIG_LINE" >> /etc/profile
   echo "export FORCE配置已成功写入/etc/profile。"
 fi
-
+sudo echo 'set number' >> /etc/vim/vimrc
 # 立即生效当前会话环境变量
 source /etc/profile
 
