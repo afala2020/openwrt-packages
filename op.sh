@@ -1,13 +1,5 @@
 #!/bin/bash
 
-# 保存原始终端设置
-original_stty=$(stty -g)
-
-# 设置终端以正确处理退格键和删除键
-stty erase ^H 2>/dev/null
-stty erase ^? 2>/dev/null
-stty intr ^C
-
 # 设置字体颜色和样式
 RED='\033[1;31m'
 GREEN='\033[1;32m'
@@ -20,6 +12,11 @@ FONT_SIZE='\033[1;5m' # 较大字号
 # 随机选择绿色或黄色作为主界面颜色
 COLORS=("$GREEN" "$YELLOW")
 MAIN_COLOR=${COLORS[$RANDOM % 2]}
+
+# 解决Backspace和Delete键问题
+stty -echoctl
+stty erase '^H' # 设置 Backspace 键
+stty werase '^[[3~' # 设置 Delete 键
 
 # 显示主界面
 show_main_menu() {
@@ -1408,8 +1405,3 @@ while true; do
         *) echo -e "${RED}无效选择，请重新输入！${NC}"; sleep 1 ;;
     esac
 done
-
-# 恢复原始终端设置
-stty "$original_stty"
-echo -e "${GREEN}已退出脚本，返回命令行终端${RESET}"
-exit 0
