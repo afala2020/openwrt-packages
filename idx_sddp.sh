@@ -63,7 +63,7 @@ if docker ps -a | grep -q "openp2p-client"; then
   docker rm -f openp2p-client || true
 fi
 # 开始启动 P2P 容器
-#docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.13 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
+# docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.13 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
 docker run -d --privileged --cap-add=NET_ADMIN --device=/dev/net/tun --restart=always --net host --name openp2p-client -e OPENP2P_TOKEN=15101489744091613018 openp2pcn/openp2p-client:3.24.10 && echo 1 > /proc/sys/net/ipv4/ip_forward && iptables -t filter -I FORWARD -i optun -j ACCEPT && iptables -t filter -I FORWARD -o optun -j ACCEPT
 sleep 3
 # 检查 P2P 容器是否启动成功
@@ -77,8 +77,8 @@ sleep 3
 # 运行 Firefox 容器
 # echo -e "${YELLOW}正在安装Firefox容器，以方便IDX保活...${RESET}"
 # 如果容器存在，先删除旧firefox容器
-#docker rm -f firefox 2>/dev/null || true
-#docker run -d \
+# docker rm -f firefox 2>/dev/null || true
+# docker run -d \
 #  --name firefox \
 #  -p 5800:5800 \
 #  -v /home/firefox-data:/config:rw \
@@ -88,13 +88,13 @@ sleep 3
 #  -e ENABLE_CJK_FONT=1 \
 #  --restart unless-stopped \
 #  jlesage/firefox
-#sleep 3
+# sleep 3
 # 检查Firefox容器是否启动成功
-#if ! docker ps | grep -q firefox; then
+# if ! docker ps | grep -q firefox; then
 #  echo -e "${RED}错误: Firefox 容器启动失败，请检查 Docker 是否正常运行${RESET}"
 #  exit 1
-#fi
-#echo -e "${YELLOW}-----Firefox容器已安装完成...${RESET}"
+# fi
+# echo -e "${YELLOW}-----Firefox容器已安装完成...${RESET}"
 
 sleep 3
 echo -e "${YELLOW}开始安装Python3.10.6...${RESET}"
