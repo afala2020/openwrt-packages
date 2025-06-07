@@ -1992,7 +1992,7 @@ firmware_config_menu() {
 main() {
     clear
     echo -e "${MAIN_COLOR}欢迎使用自编译OpenWRT固件脚本！${NC}"
-    sleep 1
+    sleep 2
     main_menu
 }
 
